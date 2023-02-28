@@ -1,25 +1,30 @@
 {% extends "base.html" %} {% block content %} {% load static %}
+<section class="content">
+  <div class="logodiv">
+    <img src="{% static 'img/twitter.png' %}" alt="" class="twitterlog" />
+    <h1>Home</h1>
+  </div>
 
-<section class="content"> 
   <section class="post_form">
-    <form action="/" method="POST">
+    <form action="/" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      <input type="text" name="name" placeholder="Name" required />
-      <textarea name="body" placeholder="Tell Us Anything" required></textarea>
-      <input type="submit" value="POST">
+      <input type="text" name="name" placeholder="Enter Your Name" required />
+      <textarea name="body" placeholder="Welcome Pharoh" required></textarea>
+      <input type="file" name="image">
+    
+      <input type="submit" value="Tweet" >
     </form>
   </section>
   <section class="posts"> 
-    {% comment %} {% if tweet.count == 0 %}
-    <p class="p-3">There is no tweet now.</p>
-    {% else %} {% endcomment %}
-
+    
     <ul>
       {% for post in posts %}
       <li>
         <img class="menu_icon js-menu-icon" src="{% static 'img/option.png' %}" />
         <div class="menu">
-          <a href="/delete/{{ post.id }}/">Delete</a>
+          <a href="/delete/{{ post.id }}">Delete</a>
+          <a href="/edit/{{ post.id}}">Edit</a>
+        
         </div>
         <div class="logo">
           <img src="{% static 'img/user.png' %}" />
@@ -28,13 +33,23 @@
           <div class="name">{{ post.name}}</div>
           <div class="datetime">{{ post.created_at}}</div>
           <p>{{ post.body}}</p>
-          <a href="/delete/{{ post.id }}/">delete</a> 
+          <br>
+          {% if post.image.url %}
+          <img class="post-image" src="{{ post.image.url }}" width="250px" alt="">
+          {% endif %}
+          <div class="like">
+            <a href="/LikeView/{{ post.id }}"><img src="/static/img/like.png" alt=""></a>
+            {{post.likes}}
+          </div>
+
+         
+          
         </div>     
-      
+        
       </li>
       {% endfor %}
     </ul>
-    {% comment %} {% endif %} {% endcomment %}
+
   </section>
   <script
   src="https://code.jquery.com/jquery-3.6.1.js"
